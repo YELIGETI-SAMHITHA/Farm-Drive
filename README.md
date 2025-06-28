@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚜 Farm Drive
 
-## Getting Started
+**Connecting Farmers to Affordable Transport — Fast, Simple & Local.**
 
-First, run the development server:
+---
+
+## 🌱 Overview
+
+**Farm Drive** is a full-stack platform designed to help farmers book nearby transport for their harvest with ease — especially during peak seasons when vehicle availability is low.
+
+It aims to bridge the gap between **rural farmers** and **local drivers** by providing a user-friendly, mobile-first solution that supports users with **limited digital literacy**.
+
+---
+
+## 🎯 Problem Statement
+
+Farmers often face:
+- 🚫 Lack of nearby transport during peak harvest
+- 📵 Low digital literacy and access to complex apps
+- 💸 High transportation costs
+- 😕 Difficulty communicating with vehicle owners
+
+---
+
+## ✅ Solution Highlights
+
+- 🔍 Discover nearby vehicles in real time
+- 📱 Easy phone login via Firebase Auth
+- 🧑‍🌾 Farmer-first UI (simple, regional-friendly)
+- 🚚 Book and track vehicles instantly
+- 💬 Optional voice/chat support for coordination
+- 🪙 Transparent pricing & booking history
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer           | Tech Used                        |
+|----------------|----------------------------------|
+| **Frontend**   | Next.js, Tailwind CSS             |
+| **Backend**    | Firebase (Auth + Firestore DB)    |
+| **Hosting**    | Vercel (Frontend)      |
+| **Auth**       | Firebase Authentication           |
+| **Design**     | Figma, Canva                      |
+
+---
+
+## 📱 UI Screens (Farmer)
+
+- ✅ Login Page (email/Google)
+- 📍 Home Page (Map & Nearby Vehicles)
+- 📦 Booking Page
+- 🕒 Booking History
+- 👤 Profile & Logout
+
+---
+
+## 🚗 UI Screens (Driver)
+
+- 🔔 Incoming Booking Requests
+- 📍 Pickup Location Map
+- ✅ Accept / Decline Ride
+- 💰 Earnings Dashboard
+
+---
+
+## 📁 Folder Structure
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+farm-drive/
+│
+├── public/             # Static assets
+├── src/
+│   ├── components/     # Reusable UI components
+│   ├── pages/          # Next.js routing
+│   ├── styles/         # Tailwind config & globals
+│   └── utils/          # Firebase configs & helpers
+│
+├── firebase/           # Firebase functions (if any)
+├── .env.local          # Environment variables
+├── tailwind.config.js
+├── next.config.js
+└── README.md
+
 ```
+## 🤝 Contributors
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **👨‍💻 Nikhil Katkuri** – Full-Stack Developer  
+  _Contributed to the project setup, UI design, Firebase integration, and overall application architecture._
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
