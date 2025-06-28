@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'OpenSans';
+  src: url('/fonts/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
+ 
+body {
+  font-family: 'OpenSans', sans-serif;
+  user-select: none;
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  appearance: none;
+  @apply w-1 bg-black/10
+}
+
+::-webkit-scrollbar-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  @apply w-1 bg-black/40
+}
+
+button{
+  cursor: pointer;
+}
