@@ -10,7 +10,7 @@ interface diemensions {
   width: number;
   height: number;
 }
-const HeroCarousel = () => {
+const HeroCarousel: React.FC<{hero:string,desc:string}> = ({hero,desc}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [diemensions, setDiemensions] = useState<diemensions>({
     width: 0,
@@ -61,11 +61,10 @@ const HeroCarousel = () => {
       </div>
       <div className="absolute inset-0 bg-black/40 flex flex-col justify-center items-start px-10 md:px-20 text-white">
         <h1 className="text-4xl md:text-5xl font-extrabold mb-4 drop-shadow-lg">
-          Welcome to FarmDrive
+          {hero}
         </h1>
         <p className="text-lg md:text-xl mb-6 max-w-xl drop-shadow-md">
-          Discover a smarter way to rent, sell, or showcase your farming
-          vehicles and tools.
+          {desc}
         </p>
         {/* <button className="px-6 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-white font-semibold">
           Explore Tractors

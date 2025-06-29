@@ -6,10 +6,12 @@ import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import MockTrucksData from "@/components/datamappers/mockTrucksData";
 import HeroCarousel from "@/components/homepage/HeroCarousel";
 import Footer from "@/components/Footer";
+import { useAuthContext } from "@/context/authContext";
 export default function Page() {
   const [langOptions, setLangOpions] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const t = useTranslations();
+  const { Logout } = useAuthContext();
+  const t = useTranslations("homePage");
+  const title = useTranslations();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -45,7 +47,7 @@ export default function Page() {
                   </svg>
                 </button>
                 <p className="font-semibold text-black/90 text-xl mx-2 ">
-                  FramDrive
+                  {title.raw("title")}
                 </p>
               </Link>
             </div>
@@ -143,7 +145,12 @@ export default function Page() {
                 </div>
               </button>
 
-              <div className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-full cursor-pointer">
+              <button
+                onClick={() => {
+                  Logout();
+                }}
+                className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-full cursor-pointer"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -158,22 +165,15 @@ export default function Page() {
                     d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
                   />
                 </svg>
-              </div>
+              </button>
             </div>
           </div>
         </header>
-        <HeroCarousel />
+        <HeroCarousel hero={t("hero.hero")} desc={t("hero.desc")} />
         <div className="mx-auto w-full max-w-[90%] flex flex-col gap-3 py-16 *:select-text">
           <div className="my-4 mb-6">
-            <h1 className="text-xl font-semibold">
-              Rent Now — Affordable Tractors at Your Fingertips
-            </h1>
-            <p className="">
-              Find the perfect tractor for your needs, available for rent at
-              affordable prices. Whether you&aapos;re cultivating, harvesting,
-              or transporting, we&apos;ve got the right vehicle ready for you —
-              fast, easy, and nearby.
-            </p>
+            <h1 className="text-xl font-semibold">{t("rent.hero")}</h1>
+            <p className="">{t("rent.desc")}</p>
           </div>
           <div className="flex gap-6 max-md:flex-col mx-auto flex-wrap">
             <MockTrucksData />

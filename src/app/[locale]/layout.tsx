@@ -2,9 +2,9 @@
 import type { Metadata } from "next";
 import "../../styles/globals.css";
 import { AuthContextProvider } from "@/context/authContext";
-import { NextIntlClientProvider } from 'next-intl';
+import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import { routing ,locale } from "@/i18n/routing";
+import { routing, locale } from "@/i18n/routing";
 import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
@@ -14,25 +14,23 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-  params
+  params,
 }: {
   children: React.ReactNode;
-  params:{ locale: string };
+  params: { locale: string };
 }) {
-  const {locale}=await params;
-  if(!routing.locales.includes(locale as locale)){
+  const { locale } = await params;
+  if (!routing.locales.includes(locale as locale)) {
     notFound();
   }
-  const messages =await getMessages();
+  const messages = await getMessages();
 
   return (
     <html lang={locale}>
       <body className="opensans antialiased">
-        <AuthContextProvider>
-          <NextIntlClientProvider locale={locale} messages={messages}>
-            {children}
-          </NextIntlClientProvider>
-        </AuthContextProvider>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <AuthContextProvider>{children}</AuthContextProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

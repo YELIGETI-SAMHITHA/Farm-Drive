@@ -2,11 +2,15 @@
 
 import React from "react";
 import { mockTrucks } from "@/data/mockTrucks";
+import { useTranslations } from "next-intl";
 export default function MockTrucksData() {
+  const t = useTranslations("trucks");
   return (
     <React.Fragment>
-      {mockTrucks.map((truck) => (
-        <div
+      {mockTrucks.map((trucks) =>{
+      const truck = t.raw(trucks.id);
+        return(
+          <div
           key={truck.id}
           className={`rounded-xl shadow-xl hover:scale-[1.01] scale-100 transition-all ease-in-out  bg-cover flex flex-col justify-end shadow w-80 aspect-[9/11] p-3`}
           style={{
@@ -20,7 +24,8 @@ export default function MockTrucksData() {
           <p className="text-sm text-gray-50">{truck.location}</p>
          </div>
         </div>
-      ))}
+        )
+      } )}
     </React.Fragment>
   );
 }

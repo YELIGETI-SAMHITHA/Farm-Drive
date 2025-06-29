@@ -1,114 +1,42 @@
+"use client"
 import Footer from "@/components/Footer";
 import Navbar from "@/components/landingpage/Navbar";
+import { useRouter } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import React from "react";
 
 export default function Home() {
-  const works = [
-    {
-      header: " Find Nearby Vehicles",
-      desc: " Detects your location and shows tractors, jeeps, and other available vehicles nearby.",
-    },
-    {
-      header: " Book Instantly",
-      desc: " Select a vehicle, confirm fare, and schedule a pickup with just a few taps.",
-    },
-    {
-      header: "Transport Safely",
-      desc: " Your harvest is safely delivered on time. View all bookings in your history.",
-    },
-  ];
+  const works = [{ id: 1 }, { id: 2 }, { id: 3 }];
+  const process = works;
+  const about = works;
+  const t = useTranslations("landingPage");
+  const headers = t.raw("headers");
+  const router = useRouter();
+
   const pricingData = [
     {
       id: 1,
-      vehicle: "Tractor",
-      icon: "🚜",
-      price: 450,
-      description: "Ideal for heavy produce transport",
-      features: ["Up to 5km transport", "Real-time tracking", "Book anytime"],
-      buttonText: "Book Tractor",
     },
     {
       id: 2,
-      vehicle: "Jeep",
-      icon: "🚚",
-      price: 300,
-      description: "Good for moderate load sizes",
-      features: ["Up to 5km transport", "Driver included", "Live availability"],
-      buttonText: "Book Jeep",
     },
     {
       id: 3,
-      vehicle: "Goods Carrier",
-      icon: "🚛",
-      price: 600,
-      description: "For large-volume logistics",
-      features: ["Up to 10km range", "Insurance included", "Dedicated driver"],
-      buttonText: "Book Carrier",
-    },
-    {
-      id: 1,
-      vehicle: "Rotavator",
-      icon: "🌀",
-      price: 500,
-      description: "Used for soil preparation and mixing crop residues.",
-      features: [
-        "Perfect for seedbed preparation",
-        "Handles dry or wet land",
-        "Fuel-efficient operation",
-      ],
-      buttonText: "Book Rotavator",
-    },
-    {
-      id: 2,
-      vehicle: "Ploughing Tractor",
-      icon: "🌾",
-      price: 600,
-      description: "Best for primary tillage and soil turning.",
-      features: [
-        "Deep ploughing for root growth",
-        "Increases soil aeration",
-        "Ideal for pre-sowing preparation",
-      ],
-      buttonText: "Book Tractor",
-    },
-    {
-      id: 3,
-      vehicle: "Seed Drill",
-      icon: "🌱",
-      price: 450,
-      description: "Used for accurate seed placement during sowing.",
-      features: [
-        "Uniform seed depth and spacing",
-        "Reduces seed wastage",
-        "Suitable for various crops",
-      ],
-      buttonText: "Book Seed Drill",
     },
     {
       id: 4,
-      vehicle: "Fertilizer Spreader",
-      icon: "🧪",
-      price: 300,
-      description: "Ensures even distribution of fertilizers.",
-      features: [
-        "Adjustable spreading range",
-        "High efficiency for large fields",
-        "Minimizes fertilizer waste",
-      ],
-      buttonText: "Book Spreader",
     },
     {
       id: 5,
-      vehicle: "Water Tanker",
-      icon: "💧",
-      price: 350,
-      description: "Essential for crop irrigation during dry seasons.",
-      features: [
-        "5000+ liter capacity",
-        "Flexible nozzles & pressure control",
-        "On-demand field delivery",
-      ],
-      buttonText: "Book Water Tanker",
+    },
+    {
+      id: 6,
+    },
+    {
+      id: 7,
+    },
+    {
+      id: 8,
     },
   ];
 
@@ -125,9 +53,7 @@ export default function Home() {
             {/*  Overlay Text */}
             <div className="absolute right-6 top-1/2 -translate-y-1/2   z-10 max-w-[90%] md:max-w-2xl">
               <h1 className="text-xl md:text-3xl lg:text-5xl font-bold text-white leading-tight">
-                From Farm to Market
-                <br />
-                Faster Than Ever.
+                {headers.hero}
               </h1>
             </div>
           </div>
@@ -136,15 +62,16 @@ export default function Home() {
         <section className="py-16 bg-gray-50 select-text">
           <div className="max-w-6xl mx-auto px-4 ">
             <h2 className="text-2xl md:text-4xl  font-bold mb-6 text-black">
-              How It Works
+              {headers.basicIntro}
             </h2>
             <div className="grid gap-8 md:grid-cols-3">
-              {works.map((item, index) => {
+              {works.map((i) => {
+                const item = t.raw(`working.${i.id.toString()}`);
                 return (
-                  <div key={index}>
+                  <div key={i.id}>
                     {/* <div className="text-4xl mb-2">📍</div> */}
                     <h3 className="text-xl font-semibold">
-                      {`${index + 1}. ${item.header} `}
+                      {`${i.id}. ${item.header} `}
                     </h3>
                     <p className="text-gray-600 mt-2">{item.desc}</p>
                   </div>
@@ -157,34 +84,21 @@ export default function Home() {
         <section className="pb-16 bg-white select-text">
           <div className="max-w-6xl mx-auto px-4 ">
             <h2 className="text-2xl md:text-4xl font-bold text-black mb-4">
-              Why Choose Farm Drive?
+              {headers.process.header}
             </h2>
             <p className="text-gray-600 mb-12">
-              Built for farmers, drivers, and rural communities.
+            {headers.process.desc}
             </p>
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 text-left">
-              <div className="p-4 border rounded-lg shadow-sm">
-                <h3 className="text-lg font-semibold">
-                  🚚 Local Transport Access
-                </h3>
-                <p className="text-gray-600 mt-1">
-                  Connects farmers with nearby tractors, jeeps, and goods
-                  vehicles easily.
-                </p>
-              </div>
-              <div className="p-4 border rounded-lg shadow-sm">
-                <h3 className="text-lg font-semibold">📱 Simple, Mobile UI</h3>
-                <p className="text-gray-600 mt-1">
-                  Designed for low digital literacy. One-click booking
-                  interface.
-                </p>
-              </div>
-              <div className="p-4 border rounded-lg shadow-sm">
-                <h3 className="text-lg font-semibold">💸 Affordable Pricing</h3>
-                <p className="text-gray-600 mt-1">
-                  No hidden charges. Transparent pricing shown before booking.
-                </p>
-              </div>
+              {process.map((i) => {
+                const item = t.raw(`process.${i.id.toString()}`);
+                return (
+                  <div key={i.id} className="p-4 border rounded-lg shadow-sm">
+                    <h3 className="text-lg font-semibold">{item.head}</h3>
+                    <p className="text-gray-600 mt-1">{item.desc}</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -192,17 +106,19 @@ export default function Home() {
         <section className="py-20 bg-gray-50" id="pricing">
           <div className="max-w-6xl mx-auto px-4 ">
             <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
-              Transparent Pricing
+             {headers.pricing.header}
             </h2>
             <p className="text-gray-600 mb-12">
-              Simple, affordable rates — no middlemen, no hidden fees.
+              {headers.pricing.desc}
             </p>
 
             <div className="grid gap-8 md:grid-cols-3">
-              {pricingData.map((item, index) => {
+              {pricingData.map((i) => {
+                const item = t.raw(`pricing.${i.id.toString()}`);
+                const details = item.features;
                 return (
                   <div
-                    key={index}
+                    key={i.id}
                     className="bg-white p-6 rounded-xl shadow-md  shadow-white  transition-all duration-100 ease-in-out hover:scale-[1.02] hover:shadow-gray-200  "
                   >
                     <h3 className="text-xl font-semibold text-black mb-2">
@@ -213,8 +129,8 @@ export default function Home() {
                       ₹{item.price} / Trip
                     </div>
                     <ul className="text-left text-sm text-gray-600 space-y-2">
-                      {item.features.map((t, i) => {
-                        return <li key={i}> ✔ {t}</li>;
+                      {details.map((f: string, i: number) => {
+                        return <li key={i}> ✔ {f}</li>;
                       })}
                     </ul>
                     <button className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-full transition-all">
@@ -230,58 +146,47 @@ export default function Home() {
         <section className="py-20 bg-white" id="how-it-works">
           <div className="max-w-6xl mx-auto px-4 ">
             <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
-              How FarmDrive Works
+             {headers.about.header}
             </h2>
             <p className="text-gray-600 mb-12">
-              Get started in just 3 simple steps
+              {headers.about.desc}
             </p>
 
             <div className="grid md:grid-cols-3 gap-8 text-left">
-              <div className="bg-gray-50 p-6 rounded-xl shadow-sm shadow-white hover:shadow-gray-300 transition-all ease-in-out duration-150 hover:scale-[1.02]">
-                <h3 className="font-semibold text-lg mb-2">
-                  1. Search Nearby Vehicles
-                </h3>
-                <p className="text-gray-600">
-                  Enter your location and find available tractors, jeeps, or
-                  carriers around you.
-                </p>
-              </div>
-              <div className="bg-gray-50 p-6 rounded-xl shadow-sm shadow-white hover:shadow-gray-300 transition-all ease-in-out duration-150 hover:scale-[1.02]">
-                <h3 className="font-semibold text-lg mb-2">
-                  2. Compare & Book
-                </h3>
-                <p className="text-gray-600">
-                  View pricing, vehicle details, and book instantly with just
-                  one tap.
-                </p>
-              </div>
-              <div className="bg-gray-50 p-6 rounded-xl shadow-sm shadow-white hover:shadow-gray-300 transition-all ease-in-out duration-150 hover:scale-[1.02]">
-                <h3 className="font-semibold text-lg mb-2">3. Get It Done</h3>
-                <p className="text-gray-600">
-                  The vehicle arrives at your location. Pay safely and get your
-                  produce moved.
-                </p>
-              </div>
+              {about.map((i) => {
+                const item = t.raw(`about.${i.id}`);
+                return (
+                  <div
+                    key={i.id}
+                    className="bg-gray-50 p-6 rounded-xl shadow-sm shadow-white hover:shadow-gray-300 transition-all ease-in-out duration-150 hover:scale-[1.02]"
+                  >
+                    <h3 className="font-semibold text-lg mb-2">
+                      {i.id + " " + item.header}
+                    </h3>
+                    <p className="text-gray-600">{item.desc}</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
         {/* final call */}
         <section className="py-16 bg-green-700 text-white px-6 md:px-12 max-w-[96%] md:max-w-6xl mx-auto rounded-3xl my-12 relative overflow-hidden">
           <h2 className="text-3xl font-bold mb-4">
-            Ready to Move Your Produce?
+           {t.raw("finalCell.heading")}
           </h2>
           <p className="mb-6">
-            Start booking local transport — quickly, affordably, and digitally.
+           {t.raw("finalCell.paragraph")}
           </p>
-          <button className="bg-white text-green-700 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-all ease-in-out duration-150 active:scale-95">
-            🚜 Start Booking Now
+          <button onClick={()=>{router.push('/auth')}} className="bg-white text-green-700 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-all ease-in-out duration-150 active:scale-95">
+             {t.raw("finalCell.buttonText")}
           </button>
           <div className="absolute right-0 max-md:hidden top-0">
             <div className="h-[500px] w-[500px] bg-green-200 top-0 rotate-[55deg]  translate-x-[120px] -translate-y-[200px]  "></div>
           </div>
         </section>
         {/* footer */}
-        <Footer/>
+        <Footer />
       </div>
     </React.Fragment>
   );

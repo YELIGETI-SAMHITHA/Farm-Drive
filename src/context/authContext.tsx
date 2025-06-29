@@ -6,8 +6,9 @@ import {
   ReactNode,
   useEffect,
 } from "react";
-import firebase, { listenToAuthChanges } from "../../firebase/firebase";
+import firebase, { listenToAuthChanges, logout } from "../../firebase/firebase";
 import { useRouter } from "next/navigation"; 
+import { useTranslations } from "next-intl";
 
 export interface authDetails {
   email: string;
@@ -31,6 +32,7 @@ type AuthContextType = {
   setAuthCredientials: (authCredientials: authDetails) => void;
   login: () => Promise<void>;
   SignUp: () => Promise<void>;
+  Logout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -39,20 +41,9 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const router = useRouter();
-  const _authScreen: authScreen[] = [
-    {
-      title: "Welcome to Farm Drive!",
-      desc: "Sign up to find transport for your crops with ease.",
-      btnText: "login",
-      handle: "sign up",
-    },
-    {
-      title: "Join Farm Drive Today!",
-      desc: "Create your account to access affordable and reliable farm transport.",
-      btnText: "Get Started",
-      handle: "sign in",
-    },
-  ];
+  const t = useTranslations();
+  const _authScreen: authScreen[] = [t.raw("auth.1"),t.raw("auth.2")];
+
   const [value, setvalue] = useState<string>("defaultValue");
   const [screen, setScreen] = useState<0 | 1>(0);
   const [authCredientials, setAuthCredientials] = useState<authDetails>({
@@ -78,7 +69,9 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
       }
     }
   };
-
+  const Logout = async () => {
+    await logout();
+  };
   const SignUp = async () => {
     try {
       if (!authCredientials.email || !authCredientials.password) {
@@ -105,8 +98,7 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
 
       if (user) {
         router.replace(`/user?v=${user.uid}`);
-      }  
-     
+      }
     });
 
     return () => unsubscribe(); // Clean up on unmount
@@ -123,6 +115,7 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
         setAuthCredientials,
         login,
         SignUp,
+        Logout,
       }}
     >
       {children}

@@ -1,9 +1,14 @@
+"use client"
 //code for Navbar
 
+import { useRouter } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import React from "react";
 
 export default function Navbar() {
+  const router = useRouter();
+  const t = useTranslations();
   return (
     <React.Fragment>
       <header className="sticky top-0 z-50 bg-white/40 backdrop-blur-2xl  py-4">
@@ -33,13 +38,13 @@ export default function Navbar() {
                 </svg>
               </button>
               <p className="font-semibold text-black/90 text-2xl md:text-3xl mx-2 md:mx-4">
-                FramDrive
+                {t.raw("title")}
               </p>
             </Link>
           </div>
           {/* CTA -button for booking */}
           <div className="flex items-center gap-3">
-            <button className="bg-black px-6 py-3 max-sm:scale-90 text-sm rounded-full text-white font-medium active:scale-90 max-sm:active:scale-80 transition-all duration-150 ease-in-out">
+            <button onClick={()=>{router.push('/auth')}} className="bg-black px-6 py-3 max-sm:scale-90 text-sm rounded-full text-white font-medium active:scale-90 max-sm:active:scale-80 transition-all duration-150 ease-in-out">
               rent now
             </button>
           </div>
