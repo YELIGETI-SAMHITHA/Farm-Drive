@@ -6,9 +6,9 @@ import {
   ReactNode,
   useEffect,
 } from "react";
-import firebase, { listenToAuthChanges, logout } from "../../firebase/firebase";
-import { useRouter } from "next/navigation"; 
-import { useTranslations } from "next-intl";
+import firebase, { listenToAuthChanges, logout } from "../../firebase/firebase";  
+import { useRouter } from "@/i18n/navigation";   
+import { useTranslations, useLocale } from "next-intl"; // <--- Import useLocale
 
 export interface authDetails {
   email: string;
@@ -41,8 +41,9 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const router = useRouter();
+  const currentLocale = useLocale();  
   const t = useTranslations();
-  const _authScreen: authScreen[] = [t.raw("auth.1"),t.raw("auth.2")];
+  const _authScreen: authScreen[] = [t.raw("auth.1"), t.raw("auth.2")];
 
   const [value, setvalue] = useState<string>("defaultValue");
   const [screen, setScreen] = useState<0 | 1>(0);
@@ -50,6 +51,7 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
     email: "",
     password: "",
   });
+
   const login = async () => {
     try {
       if (!authCredientials.email || !authCredientials.password) {
@@ -62,6 +64,7 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
       );
 
       console.log("Login successful:", user.uid);
+      // The useEffect will handle the redirect based on auth state
     } catch (error) {
       console.error("Login error:", error);
       if (error instanceof Error) {
@@ -69,9 +72,13 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
       }
     }
   };
+
   const Logout = async () => {
     await logout();
+     
+    router.replace('/', { locale: currentLocale }); // <--- Redirect to root, preserving locale
   };
+
   const SignUp = async () => {
     try {
       if (!authCredientials.email || !authCredientials.password) {
@@ -83,11 +90,12 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
         authCredientials.password
       );
 
-      console.log("Login successful:", user.uid);
+      console.log("Signup successful:", user.uid); // Log signup successful
+      // The useEffect will handle the redirect based on auth state
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Signup error:", error); // Console error for signup
       if (error instanceof Error) {
-        alert(error.message || "Login failed. Check your credentials.");
+        alert(error.message || "Signup failed. Please try again.");
       }
     }
   };
@@ -97,12 +105,16 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
       console.log(user ? "Signed in: " + user.uid : "Signed out");
 
       if (user) {
-        router.replace(`/user?v=${user.uid}`);
+        // Corrected redirect: use `locale` option with Next.js router
+        router.replace(`/user?v=${user.uid}`, { locale: currentLocale });
+      } else {
+         
       }
     });
 
-    return () => unsubscribe(); // Clean up on unmount
-  }, [router]);
+    return () => unsubscribe();  
+  }, [router, currentLocale]);  
+
   return (
     <AuthContext.Provider
       value={{
