@@ -2,15 +2,26 @@
 
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import MockTrucksData from "@/components/datamappers/mockTrucksData";
+import HeroCarousel from "@/components/homepage/HeroCarousel";
+import Footer from "@/components/Footer";
 export default function Page() {
   const [langOptions, setLangOpions] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const t = useTranslations();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const changeLanguage = (lang: string) => {
+    router.replace(pathname, { locale: lang });
+  };
+
   return (
     <React.Fragment>
-      <div className="h-screen w-full oveflow-y-scroll ">
-        <header className="w-full h-16 bg-white  max-w-[90%] mx-auto">
-          <div className="flex items-center justify-between  h-full mx-auto">
+      <div className="h-screen w-full overflow-y-auto relative">
+        <header className="sticky top-0 bg-white z-50 w-full ">
+          <div className="w-full max-w-[90%] h-16 mx-auto flex items-center justify-between">
             <div className="--logo">
               <Link href="/user" className="flex items-center ">
                 <button className="">
@@ -104,13 +115,28 @@ export default function Page() {
                     Language
                   </div>
                   <ul className="space-y-1 text-sm text-gray-600">
-                    <li className="hover:text-green-600 cursor-pointer">
+                    <li
+                      onClick={() => {
+                        changeLanguage("en");
+                      }}
+                      className="hover:text-green-600 cursor-pointer"
+                    >
                       English
                     </li>
-                    <li className="hover:text-green-600 cursor-pointer">
+                    <li
+                      onClick={() => {
+                        changeLanguage("hi");
+                      }}
+                      className="hover:text-green-600 cursor-pointer"
+                    >
                       Hindi
                     </li>
-                    <li className="hover:text-green-600 cursor-pointer">
+                    <li
+                      onClick={() => {
+                        changeLanguage("te");
+                      }}
+                      className="hover:text-green-600 cursor-pointer"
+                    >
                       Telugu
                     </li>
                   </ul>
@@ -136,8 +162,24 @@ export default function Page() {
             </div>
           </div>
         </header>
-        <div className=" mx-auto rounded-3xl overflow-hidden w-full max-w-[90%] h-[90vh] aspect-video bg-[url('/images/hero/02.jpeg')] bg-cover "></div>
-        <div className="h-12">{t("hero.welcome")}</div>
+        <HeroCarousel />
+        <div className="mx-auto w-full max-w-[90%] flex flex-col gap-3 py-16 *:select-text">
+          <div className="my-4 mb-6">
+            <h1 className="text-xl font-semibold">
+              Rent Now — Affordable Tractors at Your Fingertips
+            </h1>
+            <p className="">
+              Find the perfect tractor for your needs, available for rent at
+              affordable prices. Whether you&aapos;re cultivating, harvesting,
+              or transporting, we&apos;ve got the right vehicle ready for you —
+              fast, easy, and nearby.
+            </p>
+          </div>
+          <div className="flex gap-6 max-md:flex-col mx-auto flex-wrap">
+            <MockTrucksData />
+          </div>
+        </div>
+        <Footer />
       </div>
     </React.Fragment>
   );
