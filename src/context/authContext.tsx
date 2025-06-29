@@ -7,8 +7,7 @@ import {
   useEffect,
 } from "react";
 import firebase, { listenToAuthChanges } from "../../firebase/firebase";
-import { useRouter } from "next/navigation";
-import { setTimeout } from "timers";
+import { useRouter } from "next/navigation"; 
 
 export interface authDetails {
   email: string;
@@ -104,11 +103,10 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
     const unsubscribe = listenToAuthChanges((user) => {
       console.log(user ? "Signed in: " + user.uid : "Signed out");
 
-      setTimeout(() => {
-        if (user) {
-          router.push(`/user?v=${user.uid}`);
-        }  
-      }, 100);
+      if (user) {
+        router.replace(`/user?v=${user.uid}`);
+      }  
+     
     });
 
     return () => unsubscribe(); // Clean up on unmount

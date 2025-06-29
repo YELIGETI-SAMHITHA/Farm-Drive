@@ -118,7 +118,7 @@ export default function Home() {
         <Navbar />
         {/* hero section */}
         <section>
-          <div className="relative w-full my-6 max-w-[96%] md:max-w-[96%] lg:max-w-6xl lg:h-[80vh] max-md:max-h-72  aspect-video mx-auto flex flex-col items-center justify-center">
+          <div className="relative  w-full my-6 max-w-[96%] md:max-w-[96%] lg:max-w-6xl lg:h-[80vh] max-md:max-h-72  aspect-video mx-auto flex flex-col items-center justify-center">
             {/* Background Image */}
             <div className="absolute inset-0 bg-[url('/images/hero-theme.png')] bg-cover bg-center rounded-3xl z-0 h-full w-full" />
 

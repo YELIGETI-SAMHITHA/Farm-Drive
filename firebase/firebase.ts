@@ -1,26 +1,30 @@
-// Import Firebase SDK functions
+// Firebase core & modules
 import { initializeApp } from "firebase/app";
 import * as Auth from "firebase/auth";
 import * as Firestore from "firebase/firestore";
+
+// Utility & Types
 import { getCurrentLocation } from "../src/utils/location";
-import { User as FarmUser, Location } from "../src/types/roles"; // Import actual types, not default object
+import type { User as FarmUser, Location } from "../src/types/roles";
 
 // Firebase config
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN!,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID!,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET!,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID!,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
 };
 
-// Initialize Firebase
+// Initialize Firebase App & Services
 const app = initializeApp(firebaseConfig);
 const auth = Auth.getAuth(app);
 const db = Firestore.getFirestore(app);
 
-// SIGNUP FUNCTION
+// -----------------------------
+// ✅ SIGN UP FUNCTION
+// -----------------------------
 export const signupWithEmailPassword = async (
   email: string,
   password: string
@@ -29,10 +33,6 @@ export const signupWithEmailPassword = async (
     const userCredential = await Auth.createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-
-
-    const position = await getCurrentLocation();
-
     const userData: FarmUser = {
       uid: user.uid,
       name: "",
@@ -40,34 +40,44 @@ export const signupWithEmailPassword = async (
       phone: "",
       role: "farmer",
       createdAt: Date.now(),
-      password: password
+      password,
     };
 
-    const locationData: Location = {
-      id: `loc-${Date.now()}`,
-      name: "Current Location",
-      lat: position.coords.latitude,
-      lng: position.coords.longitude,
-      description: "Captured from browser",
-    };
+    let locationData: Location | null = null;
 
-    await Firestore.setDoc(Firestore.doc(db, "users", user.uid), {
-      ...userData,
-      location: locationData,
-    });
+    // Try getting location, fallback if blocked/denied
+    try {
+      const position = await getCurrentLocation();
+      locationData = {
+        id: `loc-${Date.now()}`,
+        name: "Current Location",
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+        description: "Captured from browser",
+      };
+    } catch (err) {
+      console.warn("Location not available or permission denied:", err);
+    }
 
+    const docData = locationData
+      ? { ...userData, location: locationData }
+      : { ...userData };
+
+    await Firestore.setDoc(Firestore.doc(db, "users", user.uid), docData);
 
     return user;
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(error.message);
-    } else {
-      throw new Error("Unknown signup error");
+      throw new Error(error.message || "Unknown signup error");
     }
+    console.error("Unknown signup error");
+    throw error;
   }
 };
 
-// SIGN-IN FUNCTION
+// -----------------------------
+// ✅ SIGN IN FUNCTION
+// -----------------------------
 export const signInWithEmailPassword = async (
   email: string,
   password: string
@@ -80,34 +90,42 @@ export const signInWithEmailPassword = async (
     return user;
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error(error.message);
-    } else {
-      throw new Error("Unknown sign-in error");
+      throw new Error(error?.message || "Unknown signup error");
+
     }
+    console.error("Unknown signup error");
+    throw error
   }
 };
 
-export const logout = async () => {
+// -----------------------------
+// ✅ SIGN OUT FUNCTION
+// -----------------------------
+export const logout = async (): Promise<void> => {
   try {
-    Auth.signOut(auth);
+    await Auth.signOut(auth);
   } catch (error) {
-    console.log(error)
+    console.error("Logout error:", error);
   }
-}
+};
 
-//  AUTH STATE LISTENER
+// -----------------------------
+// ✅ AUTH STATE LISTENER
+// -----------------------------
 export const listenToAuthChanges = (callback: (user: Auth.User | null) => void) => {
   return Auth.onAuthStateChanged(auth, callback);
 };
 
-
-//  Firebase Utility Object
+// -----------------------------
+// ✅ Export Firebase Utility Object
+// -----------------------------
 const firebase = {
   app,
   auth,
   db,
   signInWithEmailPassword,
   signupWithEmailPassword,
+  logout,
   listenToAuthChanges,
 };
 

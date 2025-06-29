@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import React from "react";
-import "../../styles/auth.css";
+import "../../../styles/auth.css";
 import { authDetails, authScreen, useAuthContext } from "@/context/authContext";
 
 const Form: React.FC<{
