@@ -1,5 +1,6 @@
 import type { Metadata } from "next"; 
 import "../styles/globals.css";
+import { AuthContextProvider } from "@/context/authContext";
 
 export const metadata: Metadata = {
   title: "Farm drive",
@@ -16,7 +17,10 @@ export default function RootLayout({
       <body
         className="opensans antialiased"
       >
+        <AuthContextProvider>
+
         {children}
+        </AuthContextProvider>
       </body>
     </html>
   );
