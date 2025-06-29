@@ -2,14 +2,18 @@
 import Image from "next/image";
 import React from "react";
 import "../../styles/auth.css";
-import { authScreen, useAuthContext } from "@/context/authContext";
-const Form: React.FC<{ data: authScreen; handler: () => void }> = ({
-  data,
-  handler,
-}) => {
+import { authDetails, authScreen, useAuthContext } from "@/context/authContext";
+
+const Form: React.FC<{
+  data: authScreen;
+  handler: () => void;
+  auth: authDetails;
+  setAuth: (auth: authDetails) => void;
+  login: () => Promise<void>;
+}> = ({ data, handler, auth, setAuth, login }) => {
   return (
     <React.Fragment>
-      <form className="p-4 sm:p-10 bg-white rounded-2xl shadow  w-full">
+      <div className="p-4 sm:p-10 bg-white rounded-2xl shadow  w-full">
         <div className="flex flex-col font-semibold ">
           <label>Email </label>
         </div>
@@ -26,6 +30,10 @@ const Form: React.FC<{ data: authScreen; handler: () => void }> = ({
           </svg>
           <input
             type="text"
+            value={auth.email}
+            onChange={(e) => {
+              setAuth({ ...auth, email: e.target.value });
+            }}
             className="flex-1 outline-0 "
             placeholder="Enter your Email"
           />
@@ -45,6 +53,10 @@ const Form: React.FC<{ data: authScreen; handler: () => void }> = ({
           </svg>
           <input
             type="password"
+            value={auth.password}
+            onChange={(e) => {
+              setAuth({ ...auth, password: e.target.value });
+            }}
             className="flex-1 outline-0 "
             placeholder="Enter your Password"
           />
@@ -57,7 +69,14 @@ const Form: React.FC<{ data: authScreen; handler: () => void }> = ({
           </svg>
         </div>
 
-        <button className="button-submit">{data.btnText}</button>
+        <button
+          className="button-submit"
+          onClick={() => {
+            login();
+          }}
+        >
+          {data.btnText}
+        </button>
         <p className="p">
           {data.handle.includes("sign up")
             ? "Don't have an account?"
@@ -133,13 +152,21 @@ const Form: React.FC<{ data: authScreen; handler: () => void }> = ({
             Apple
           </button>
         </div>
-      </form>
+      </div>
     </React.Fragment>
   );
 };
 
 export default function Auth() {
-  const { screen, _authScreen, setScreen } = useAuthContext();
+  const {
+    screen,
+    _authScreen,
+    setScreen,
+    authCredientials,
+    setAuthCredientials,
+    login,
+    SignUp,
+  } = useAuthContext();
   const data = _authScreen[screen];
   return (
     <div className="h-screen w-full bg-slate-50 flex flex-col md:flex-row items-center justify-center font-sans select-text">
@@ -152,9 +179,12 @@ export default function Auth() {
           <p className="text-gray-600 text-lg mb-8 text-center">{data.desc}</p>
           <Form
             data={data}
+            login={screen === 0 ? login : SignUp}
             handler={() => {
               setScreen(screen === 1 ? 0 : 1);
             }}
+            auth={authCredientials}
+            setAuth={setAuthCredientials}
           />
         </div>
       </div>

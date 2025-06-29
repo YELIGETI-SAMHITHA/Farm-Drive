@@ -1,11 +1,25 @@
 "use client";
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
+import firebase, { listenToAuthChanges } from "../../firebase/firebase";
+import { useRouter } from "next/navigation";
+import { setTimeout } from "timers";
+
+export interface authDetails {
+  email: string;
+  password: string;
+}
 
 export interface authScreen {
   title: string;
   desc: string;
   btnText: string;
-  handle:string;
+  handle: string;
 }
 
 type AuthContextType = {
@@ -14,6 +28,10 @@ type AuthContextType = {
   value: string;
   _authScreen: authScreen[];
   setvalue: (value: string) => void;
+  authCredientials: authDetails;
+  setAuthCredientials: (authCredientials: authDetails) => void;
+  login: () => Promise<void>;
+  SignUp: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,26 +39,93 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const router = useRouter();
   const _authScreen: authScreen[] = [
     {
       title: "Welcome to Farm Drive!",
       desc: "Sign up to find transport for your crops with ease.",
       btnText: "login",
-      handle:'sign up'
+      handle: "sign up",
     },
     {
       title: "Join Farm Drive Today!",
       desc: "Create your account to access affordable and reliable farm transport.",
       btnText: "Get Started",
-      handle:'sign in'
+      handle: "sign in",
     },
   ];
   const [value, setvalue] = useState<string>("defaultValue");
   const [screen, setScreen] = useState<0 | 1>(0);
+  const [authCredientials, setAuthCredientials] = useState<authDetails>({
+    email: "",
+    password: "",
+  });
+  const login = async () => {
+    try {
+      if (!authCredientials.email || !authCredientials.password) {
+        throw new Error("Email or password is missing.");
+      }
 
+      const user = await firebase.signInWithEmailPassword(
+        authCredientials.email,
+        authCredientials.password
+      );
+
+      console.log("Login successful:", user.uid);
+    } catch (error) {
+      console.error("Login error:", error);
+      if (error instanceof Error) {
+        alert(error.message || "Login failed. Check your credentials.");
+      }
+    }
+  };
+
+  const SignUp = async () => {
+    try {
+      if (!authCredientials.email || !authCredientials.password) {
+        throw new Error("Email or password is missing.");
+      }
+
+      const user = await firebase.signupWithEmailPassword(
+        authCredientials.email,
+        authCredientials.password
+      );
+
+      console.log("Login successful:", user.uid);
+    } catch (error) {
+      console.error("Login error:", error);
+      if (error instanceof Error) {
+        alert(error.message || "Login failed. Check your credentials.");
+      }
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = listenToAuthChanges((user) => {
+      console.log(user ? "Signed in: " + user.uid : "Signed out");
+
+      setTimeout(() => {
+        if (user) {
+          router.push(`/user?v=${user.uid}`);
+        }  
+      }, 100);
+    });
+
+    return () => unsubscribe(); // Clean up on unmount
+  }, [router]);
   return (
     <AuthContext.Provider
-      value={{ value, setvalue, screen, setScreen, _authScreen }}
+      value={{
+        value,
+        setvalue,
+        screen,
+        setScreen,
+        _authScreen,
+        authCredientials,
+        setAuthCredientials,
+        login,
+        SignUp,
+      }}
     >
       {children}
     </AuthContext.Provider>
