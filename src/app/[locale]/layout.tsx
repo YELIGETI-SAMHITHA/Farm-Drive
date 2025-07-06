@@ -8,7 +8,7 @@ import { getMessages } from "next-intl/server";
 // I've kept 'routing' and explicitly imported 'LocaleType' for clarity
 import { routing, locale as LocaleType } from "@/i18n/routing"; 
 import { notFound } from "next/navigation";
-
+ 
 export const metadata: Metadata = {
   title: "Farm Drive",
   description: "Developed with love by Nikhil",
@@ -39,7 +39,10 @@ export default async function RootLayout({
     <html lang={locale}>
       <body className="opensans antialiased">
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <AuthContextProvider>{children}</AuthContextProvider>
+          <AuthContextProvider>
+            
+            {children}
+            </AuthContextProvider>
         </NextIntlClientProvider>
       </body>
     </html>

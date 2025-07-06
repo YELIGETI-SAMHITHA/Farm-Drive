@@ -1,14 +1,19 @@
-"use client"
+"use client";
 //code for Navbar
 
-import { useRouter } from "@/i18n/navigation";
+import { usePathname, useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 export default function Navbar() {
   const router = useRouter();
-  const t = useTranslations();
+  const t = useTranslations(); 
+  const pathname = usePathname();
+  const [langOptions, setLangOpions] = useState(false);
+  const changeLanguage = (lang: string) => {
+    router.replace(pathname, { locale: lang });
+  };
   return (
     <React.Fragment>
       <header className="sticky top-0 z-50 bg-white/40 backdrop-blur-2xl  py-4">
@@ -44,8 +49,73 @@ export default function Navbar() {
           </div>
           {/* CTA -button for booking */}
           <div className="flex items-center gap-3">
-            <button onClick={()=>{router.push('/auth')}} className="bg-black px-6 py-3 max-sm:scale-90 text-sm rounded-full text-white font-medium active:scale-90 max-sm:active:scale-80 transition-all duration-150 ease-in-out">
+           
+            <button
+              onClick={() => {
+                router.push("/auth");
+              }}
+              className="bg-black px-6 py-3 max-sm:scale-90 text-sm rounded-full text-white font-medium active:scale-90 max-sm:active:scale-80 transition-all duration-150 ease-in-out"
+            >
               rent now
+            </button>
+             <button
+              onClick={() => {
+                setLangOpions(!langOptions);
+              }}
+              className="relative inline-flex items-center gap-3 p-2 hover:bg-gray-100 rounded-full cursor-pointer transition duration-200"
+            >
+              {/* Icon */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6 text-gray-700 group-hover:text-green-600 transition"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m10.5 21 5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 0 1 6-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 0 1-3.827-5.802"
+                />
+              </svg>
+
+              {/* Dropdown Panel */}
+              <div
+                className={`absolute top-full right-0 mt-2 w-48 rounded-xl shadow-lg bg-white/90 backdrop-blur border border-gray-200 p-3 text-start  ${
+                  langOptions ? "scale-100" : "scale-0"
+                } transition-all duration-200 origin-top-right`}
+              >
+                <div className="text-sm text-gray-700 font-medium mb-2">
+                  Language
+                </div>
+                <ul className="space-y-1 text-sm text-gray-600">
+                  <li
+                    onClick={() => {
+                      changeLanguage("en");
+                    }}
+                    className="hover:text-green-600 cursor-pointer"
+                  >
+                    English
+                  </li>
+                  <li
+                    onClick={() => {
+                      changeLanguage("hi");
+                    }}
+                    className="hover:text-green-600 cursor-pointer"
+                  >
+                    Hindi
+                  </li>
+                  <li
+                    onClick={() => {
+                      changeLanguage("te");
+                    }}
+                    className="hover:text-green-600 cursor-pointer"
+                  >
+                    Telugu
+                  </li>
+                </ul>
+              </div>
             </button>
           </div>
         </nav>

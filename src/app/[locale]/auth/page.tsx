@@ -3,6 +3,7 @@ import Image from "next/image";
 import React from "react";
 import "../../../styles/auth.css";
 import { authDetails, authScreen, useAuthContext } from "@/context/authContext";
+import PageLoader from "@/components/loader/page_loader";
 
 const Form: React.FC<{
   data: authScreen;
@@ -166,40 +167,49 @@ export default function Auth() {
     setAuthCredientials,
     login,
     SignUp,
+    loading,
   } = useAuthContext();
   const data = _authScreen[screen];
+
+  if (loading) {
+     return <PageLoader />;
+  }
   return (
-    <div className="h-screen w-full bg-slate-50 flex flex-col md:flex-row items-center justify-center font-sans select-text">
-      {/* Left side for content (e.g., login/signup form) */}
-      <div className="w-full md:w-[60%] h-full flex flex-col items-center justify-center p-3 sm:p-8 lg:p-16">
-        <div className="sm:max-w-md w-full ">
-          <h1 className="text-4xl font-bold text-center text-gray-800 mb-4">
-            {data.title}
-          </h1>
-          <p className="text-gray-600 text-lg mb-8 text-center">{data.desc}</p>
-          <Form
-            data={data}
-            login={screen === 0 ? login : SignUp}
-            handler={() => {
-              setScreen(screen === 1 ? 0 : 1);
-            }}
-            auth={authCredientials}
-            setAuth={setAuthCredientials}
+    <React.Fragment>
+      <div className="h-screen w-full bg-slate-50 flex flex-col md:flex-row items-center justify-center font-sans select-text">
+        {/* Left side for content (e.g., login/signup form) */}
+        <div className="w-full md:w-[60%] h-full flex flex-col items-center justify-center p-3 sm:p-8 lg:p-16">
+          <div className="sm:max-w-md w-full ">
+            <h1 className="text-4xl font-bold text-center text-gray-800 mb-4">
+              {data.title}
+            </h1>
+            <p className="text-gray-600 text-lg mb-8 text-center">
+              {data.desc}
+            </p>
+            <Form
+              data={data}
+              login={screen === 0 ? login : SignUp}
+              handler={() => {
+                setScreen(screen === 1 ? 0 : 1);
+              }}
+              auth={authCredientials}
+              setAuth={setAuthCredientials}
+            />
+          </div>
+        </div>
+
+        {/* Right side for the image */}
+        <div className="w-full md:w-[40%] h-full relative overflow-hidden hidden md:block rounded-tr-lg rounded-br-lg">
+          <Image
+            height={1600}
+            width={900}
+            priority
+            src="/images/auth-theme.jpg" // Path to your image in the public folder
+            alt="Abstract background image for authentication page" // Descriptive alt text for accessibility
+            className="absolute inset-0 w-full h-full object-cover rounded-tr-lg rounded-br-lg" // Tailwind classes for styling
           />
         </div>
       </div>
-
-      {/* Right side for the image */}
-      <div className="w-full md:w-[40%] h-full relative overflow-hidden hidden md:block rounded-tr-lg rounded-br-lg">
-        <Image
-          height={1600}
-          width={900}
-          priority
-          src="/images/auth-theme.jpg" // Path to your image in the public folder
-          alt="Abstract background image for authentication page" // Descriptive alt text for accessibility
-          className="absolute inset-0 w-full h-full object-cover rounded-tr-lg rounded-br-lg" // Tailwind classes for styling
-        />
-      </div>
-    </div>
+    </React.Fragment>
   );
 }

@@ -7,9 +7,10 @@ import MockTrucksData from "@/components/datamappers/mockTrucksData";
 import HeroCarousel from "@/components/homepage/HeroCarousel";
 import Footer from "@/components/Footer";
 import { useAuthContext } from "@/context/authContext";
+import PageLoader from "@/components/loader/page_loader";
 export default function Page() {
   const [langOptions, setLangOpions] = useState(false);
-  const { Logout } = useAuthContext();
+  const { Logout ,loading} = useAuthContext();
   const t = useTranslations("homePage");
   const title = useTranslations();
   const router = useRouter();
@@ -18,6 +19,9 @@ export default function Page() {
   const changeLanguage = (lang: string) => {
     router.replace(pathname, { locale: lang });
   };
+  if(loading){
+    return <PageLoader />
+  }
 
   return (
     <React.Fragment>
